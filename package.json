@@ -27,10 +27,10 @@
   "unpkg": "dist/vue-datepicker.min.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mathieustan/vue-datepicker.git"
+    "url": "git+https://github.com/ndirangug/vue-datepicker.git"
   },
   "bugs": {
-    "url": "https://github.com/mathieustan/vue-datepicker/issues"
+    "url": "https://github.com/ndirangug/vue-datepicker/issues"
   },
   "homepage": "https://vue-datepicker.netlify.com/",
   "scripts": {
