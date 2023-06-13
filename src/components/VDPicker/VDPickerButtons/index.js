@@ -1,3 +1,3 @@
-import VDPickerButtons from "./VDPickerButtons";
+import VDPickerButtons from './VDPickerButtons';
 
 export default VDPickerButtons;
