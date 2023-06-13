@@ -28,7 +28,7 @@
       </li>
     </ul>
     <h3>Vue Date Picker</h3>
-    <VueDatePicker />
+    <VueDatePicker v-model="date" no-header />
   </div>
 </template>
 
@@ -43,6 +43,11 @@ export default {
   },
   props: {
     msg: String,
+  },
+  data() {
+    return {
+      date: new Date(),
+    };
   },
 };
 </script>

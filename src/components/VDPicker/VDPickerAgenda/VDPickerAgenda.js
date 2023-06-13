@@ -375,6 +375,8 @@ export default baseMixins.extend({
         this.mode === DATEPICKER_MODES.month && this.genMonths(),
         this.mode === DATEPICKER_MODES.quarter && this.genQuarters(),
         this.mode === DATEPICKER_MODES.year && this.genYears(),
+        this.mode !== DATEPICKER_MODES.year && this.genControls(),
+        this.mode === DATEPICKER_MODES.date && this.genQuickButtons(),
       ];
 
       return this.$createElement(
