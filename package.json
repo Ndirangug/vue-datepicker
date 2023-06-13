@@ -45,7 +45,8 @@
     "lint": "vue-cli-service lint --ext .js,.vue src tests/unit/* build/*",
     "lint:fix": "npm run lint --fix",
     "test:client": "vue-cli-service test:unit",
-    "prepublishOnly": "npm run lint:fix && npm run test:client && npm run build"
+    "prepublishOnly": "npm run lint:fix && npm run test:client && npm run build",
+    "publish": "npm run prepublishOnly && git push"
   },
   "dependencies": {
     "body-scroll-lock": "^2.6.1",

@@ -1,29 +1,29 @@
 // Styles
-import "./VDPickerButtons.scss";
+import './VDPickerButtons.scss';
 
 // Mixins
-import colorable from "../../../mixins/colorable";
+import colorable from '../../../mixins/colorable';
 
 // Helpers
-import mixins from "../../../utils/mixins";
+import mixins from '../../../utils/mixins';
 
 const baseMixins = mixins(colorable);
 
 export default baseMixins.extend({
-  name: "VDPickerButtons",
-  inject: ["VDPicker"],
+  name: 'VDPickerButtons',
+  inject: ['VDPicker'],
   props: {
     label: { type: String },
   },
   computed: {
-    classes() {
+    classes () {
       return {};
     },
-    computedColor() {
-      if (this.disabled) return "";
-      return this.isMenuActive ? this.color : "";
+    computedColor () {
+      if (this.disabled) return '';
+      return this.isMenuActive ? this.color : '';
     },
-    isDirty() {
+    isDirty () {
       return this.isDateDefined;
     },
   },
@@ -31,17 +31,17 @@ export default baseMixins.extend({
     // ------------------------------
     // Events
     // ------------------------------
-    onKeyDown(event) {
-      this.$emit("keydown", event);
+    onKeyDown (event) {
+      this.$emit('keydown', event);
     },
-    clearableCallback() {
-      this.$emit("clearDate");
+    clearableCallback () {
+      this.$emit('clearDate');
     },
     // ------------------------------
     // Generate Template
     // ------------------------------
   },
-  render(h) {
-    return h("button", this.label);
+  render (h) {
+    return h('button', this.label);
   },
 });

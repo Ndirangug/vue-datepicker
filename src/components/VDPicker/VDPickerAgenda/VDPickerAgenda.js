@@ -2,30 +2,30 @@ import {
   clearAllBodyScrollLocks,
   disableBodyScroll,
   enableBodyScroll,
-} from "body-scroll-lock";
+} from 'body-scroll-lock';
 
 // Styles
-import "./VDPickerAgenda.scss";
+import './VDPickerAgenda.scss';
 
 // Mixins
-import colorable from "../../../mixins/colorable";
-import Localable from "../../../mixins/localable";
-import Overlayable from "../../../mixins/overlayable";
+import colorable from '../../../mixins/colorable';
+import Localable from '../../../mixins/localable';
+import Overlayable from '../../../mixins/overlayable';
 
 // Components
-import VDIcon from "../../VDIcon";
-import VDPickerButtons from "../VDPickerButtons";
-import VDPickerControls from "../VDPickerControls";
-import VDPickerHeader from "../VDPickerHeader";
-import VDPickerMonths from "../VDPickerMonths";
-import VDPickerPresets from "../VDPickerPresets";
-import VDPickerQuarters from "../VDPickerQuarters";
-import VDPickerTableDate from "../VDPickerTableDate";
-import VDPickerValidate from "../VDPickerValidate";
-import VDPickerYears from "../VDPickerYears";
+import VDIcon from '../../VDIcon';
+import VDPickerButtons from '../VDPickerButtons';
+import VDPickerControls from '../VDPickerControls';
+import VDPickerHeader from '../VDPickerHeader';
+import VDPickerMonths from '../VDPickerMonths';
+import VDPickerPresets from '../VDPickerPresets';
+import VDPickerQuarters from '../VDPickerQuarters';
+import VDPickerTableDate from '../VDPickerTableDate';
+import VDPickerValidate from '../VDPickerValidate';
+import VDPickerYears from '../VDPickerYears';
 
 // Functions
-import PickerDate from "../utils/PickerDate";
+import PickerDate from '../utils/PickerDate';
 import {
   convertQuarterToMonth,
   generateDate,
@@ -35,18 +35,18 @@ import {
   isAfterDate,
   isBeforeDate,
   isDateAfter,
-} from "../utils/helpers";
+} from '../utils/helpers';
 
 // Constants
-import { DATEPICKER_MODES } from "../../../constants";
+import { DATEPICKER_MODES } from '../../../constants';
 
 // Helpers
-import mixins from "../../../utils/mixins";
+import mixins from '../../../utils/mixins';
 
 const baseMixins = mixins(colorable, Overlayable, Localable);
 
 export default baseMixins.extend({
-  name: "VDPickerAgenda",
+  name: 'VDPickerAgenda',
   props: {
     allowedDates: { type: Function },
     buttonCancel: { type: String },
@@ -63,41 +63,41 @@ export default baseMixins.extend({
     rangeHeaderText: { type: String, default: String },
     rangePresets: { type: Array, default: undefined },
     rtl: { type: Boolean, default: false },
-    type: { type: String, default: "date" },
+    type: { type: String, default: 'date' },
     validate: { type: Boolean, default: false },
     value: { type: Boolean, default: false },
     visibleYearsNumber: { type: Number },
   },
   data: () => ({
-    height: "auto",
+    height: 'auto',
     // Displayed year/month
     pickerDate: undefined,
     // mutableDate stores selected date
     mutableDate: undefined,
     // Mode switch between date / month / quarter / year table
     mode: DATEPICKER_MODES.date,
-    transitionDaysName: "slide-h-next",
-    transitionLabelName: "slide-v-next",
+    transitionDaysName: 'slide-h-next',
+    transitionLabelName: 'slide-v-next',
   }),
   computed: {
-    classes() {
+    classes () {
       return {
-        "vd-picker--rtl": this.rtl,
-        "vd-picker--bottomsheet": this.fullscreen,
-        "vd-picker--no-header": this.noHeader,
-        "vd-picker--validate": this.validate,
-        "vd-picker--range": this.range,
-        "vd-picker--range-selecting": this.range && !this.isRangeSelected,
+        'vd-picker--rtl': this.rtl,
+        'vd-picker--bottomsheet': this.fullscreen,
+        'vd-picker--no-header': this.noHeader,
+        'vd-picker--validate': this.validate,
+        'vd-picker--range': this.range,
+        'vd-picker--range-selecting': this.range && !this.isRangeSelected,
       };
     },
-    isRangeSelected() {
+    isRangeSelected () {
       if (!this.range) return false;
       return (
-        typeof this.mutableDate === "object" &&
+        typeof this.mutableDate === 'object' &&
         Object.values(this.mutableDate).every((date) => Boolean(date))
       );
     },
-    formatters() {
+    formatters () {
       return generateDates({
         headerFormat: this.headerFormat,
         locale: this.locale,
@@ -109,24 +109,24 @@ export default baseMixins.extend({
       });
     },
   },
-  created() {
+  created () {
     this.initAgenda();
   },
-  beforeDestroy() {
+  beforeDestroy () {
     clearAllBodyScrollLocks();
   },
   watch: {
-    value: "initAgenda",
+    value: 'initAgenda',
     // When, date change (after being visibled),
     // should update pickerDate & mutableDate
-    date: "initDatesForPicker",
+    date: 'initDatesForPicker',
     // When type change (after being visibled),
     // should update update active mode
-    type: "updateMode",
+    type: 'updateMode',
     // When fullscreen is visibled => lock body scroll
     // When fullscreen is hidden => unlock body scroll
     fullscreen: {
-      handler(show) {
+      handler (show) {
         this.$nextTick(() => {
           const targetElement = this.$refs.body;
 
@@ -143,27 +143,27 @@ export default baseMixins.extend({
     },
     // When fullscreen is visibled and visibled mode is 'year'
     // => should keep scroll disabled, but should allow scroll into years list
-    mode(mode) {
-      if (mode !== "year" || !this.fullscreen) return;
+    mode (mode) {
+      if (mode !== 'year' || !this.fullscreen) return;
       enableBodyScroll(this.$refs.body);
       this.$nextTick(() => {
-        disableBodyScroll(this.$el.querySelector(".vd-picker__years"));
+        disableBodyScroll(this.$el.querySelector('.vd-picker__years'));
       });
     },
   },
   methods: {
-    initAgenda() {
+    initAgenda () {
       this.initDatesForPicker(this.date);
       this.updateMode(this.type);
     },
-    updateTransitions(direction) {
+    updateTransitions (direction) {
       this.transitionDaysName = `slide-h-${direction}`;
       this.transitionLabelName = `slide-v-${direction}`;
     },
     // ------------------------------
     // Handle dates change
     // ------------------------------
-    reOrderSelectedDate(newDate) {
+    reOrderSelectedDate (newDate) {
       if (!this.mutableDate) return;
       // Should update mutableDate if
       // -> hovered day is before or after current selected date
@@ -173,7 +173,7 @@ export default baseMixins.extend({
         this.mutableDate = { start: this.mutableDate.end, end: undefined };
       }
     },
-    selectDate(day) {
+    selectDate (day) {
       if (this.range) {
         // If rangeIsSelected or no dates selected => should reset, and select start
         if (
@@ -193,11 +193,11 @@ export default baseMixins.extend({
         return;
       }
 
-      const direction = isDateAfter(day, this.mutableDate) ? "next" : "prev";
+      const direction = isDateAfter(day, this.mutableDate) ? 'next' : 'prev';
       this.updateTransitions(direction);
       this.emitSelectedDate(day.clone());
     },
-    emitSelectedDate(date) {
+    emitSelectedDate (date) {
       // If range, when a preset is selected,
       // should transition to end date month
       if (this.range) {
@@ -209,9 +209,9 @@ export default baseMixins.extend({
       }
 
       this.mutableDate = date;
-      this.$emit("selectDate", this.mutableDate);
+      this.$emit('selectDate', this.mutableDate);
     },
-    initDatesForPicker(date) {
+    initDatesForPicker (date) {
       let newDate = generateDate({
         date: this.range ? date.end || date.start : date,
         locale: this.currentLocale,
@@ -237,13 +237,13 @@ export default baseMixins.extend({
 
       // When type is quarter && date is not defined -> newDate equals today's date
       // So we need to convert it to quarter month -> for example : 2020-11-20 => 2020-4
-      if (date == null && this.type === "quarter") {
+      if (date == null && this.type === 'quarter') {
         newDate = newDate.month(newDate.quarter());
       }
 
       // When type is quarter && date is defined -> newDate will convert quarter date to month
       // For example : 2020-2 => 2020-02-01 but quarter 2 should be 2020-04-01
-      if (date != null && this.type === "quarter") {
+      if (date != null && this.type === 'quarter') {
         newDate = newDate.month(convertQuarterToMonth(newDate.month()));
       }
 
@@ -254,18 +254,18 @@ export default baseMixins.extend({
       );
       this.mutableDate = date && date.month(newDate.month()).clone();
     },
-    changeMonth(direction) {
-      let month = this.pickerDate.month + (direction === "prev" ? -1 : +1);
+    changeMonth (direction) {
+      let month = this.pickerDate.month + (direction === 'prev' ? -1 : +1);
       let year = this.pickerDate.year;
       if (month > 11 || month < 0) {
-        year += direction === "prev" ? -1 : +1;
-        month = direction === "prev" ? 11 : 0;
+        year += direction === 'prev' ? -1 : +1;
+        month = direction === 'prev' ? 11 : 0;
       }
       this.updateTransitions(direction);
       this.pickerDate = new PickerDate(month, year, this.currentLocale);
     },
-    changeYear(direction) {
-      let year = this.pickerDate.year + (direction === "prev" ? -1 : +1);
+    changeYear (direction) {
+      let year = this.pickerDate.year + (direction === 'prev' ? -1 : +1);
       const month = this.pickerDate.month;
       this.updateTransitions(direction);
       this.pickerDate = new PickerDate(month, year, this.currentLocale);
@@ -273,10 +273,10 @@ export default baseMixins.extend({
     // ------------------------------
     // Handle Year/Month/Quarter
     // ------------------------------
-    updateMode(mode) {
+    updateMode (mode) {
       this.mode = mode;
     },
-    updateSelectedYearMonth(value, mode) {
+    updateSelectedYearMonth (value, mode) {
       const { year, month } = generateMonthAndYear(
         value,
         this.pickerDate,
@@ -285,14 +285,14 @@ export default baseMixins.extend({
       this.pickerDate = new PickerDate(month, year, this.currentLocale);
 
       // When mode is year, we'll show month/quarter (unless type is year)
-      if (mode === DATEPICKER_MODES.year && this.type !== "year") {
-        const nextActiveMode = this.type === "quarter" ? "quarter" : "month";
+      if (mode === DATEPICKER_MODES.year && this.type !== 'year') {
+        const nextActiveMode = this.type === 'quarter' ? 'quarter' : 'month';
         return this.updateMode(nextActiveMode);
       }
 
       // When type is month|quarter|year
       // Should emit date selected if it's not type date
-      if (this.type !== "date") {
+      if (this.type !== 'date') {
         const newDate = generateDateWithYearAndMonth({
           year: this.pickerDate.year,
           month: this.pickerDate.month,
@@ -302,41 +302,41 @@ export default baseMixins.extend({
         return;
       }
 
-      this.updateMode("date");
+      this.updateMode('date');
     },
     // ------------------------------
     // Generate Template
     // ------------------------------
-    genTitle() {
-      const title = this.$createElement("p", this.name);
+    genTitle () {
+      const title = this.$createElement('p', this.name);
       const icon = this.$createElement(
         VDIcon,
         {
           on: {
-            click: () => this.$emit("close"),
+            click: () => this.$emit('close'),
           },
         },
-        ["close"]
+        ['close']
       );
 
       return this.$createElement(
-        "div",
+        'div',
         {
-          staticClass: "vd-picker__title",
+          staticClass: 'vd-picker__title',
         },
         [
           title,
           this.$createElement(
-            "div",
+            'div',
             {
-              staticClass: "vd-picker__title-close",
+              staticClass: 'vd-picker__title-close',
             },
             [icon]
           ),
         ]
       );
     },
-    genHeader() {
+    genHeader () {
       return this.$createElement(VDPickerHeader, {
         props: {
           ...this.formatters,
@@ -348,11 +348,11 @@ export default baseMixins.extend({
           type: this.type,
         },
         on: {
-          "update-mode": this.updateMode,
+          'update-mode': this.updateMode,
         },
       });
     },
-    genPresets() {
+    genPresets () {
       return this.$createElement(VDPickerPresets, {
         props: {
           rangePresets: this.rangePresets,
@@ -363,11 +363,11 @@ export default baseMixins.extend({
           locale: this.locale,
         },
         on: {
-          "update-range": this.emitSelectedDate,
+          'update-range': this.emitSelectedDate,
         },
       });
     },
-    genBody() {
+    genBody () {
       const children = [
         this.mode !== DATEPICKER_MODES.year && this.genControls(),
         this.mode === DATEPICKER_MODES.date && this.genTableDate(),
@@ -378,15 +378,15 @@ export default baseMixins.extend({
       ];
 
       return this.$createElement(
-        "div",
+        'div',
         {
-          staticClass: "vd-picker__body",
-          ref: "body",
+          staticClass: 'vd-picker__body',
+          ref: 'body',
         },
         children
       );
     },
-    genControls() {
+    genControls () {
       return this.$createElement(VDPickerControls, {
         props: {
           pickerDate: this.pickerDate,
@@ -397,15 +397,15 @@ export default baseMixins.extend({
           mode: this.mode,
         },
         on: {
-          "on-navigation-click":
+          'on-navigation-click':
             this.mode === DATEPICKER_MODES.date
               ? this.changeMonth
               : this.changeYear,
-          "update-mode": this.updateMode,
+          'update-mode': this.updateMode,
         },
       });
     },
-    genTableDate() {
+    genTableDate () {
       return this.$createElement(VDPickerTableDate, {
         props: {
           allowedDates: this.allowedDates,
@@ -420,40 +420,40 @@ export default baseMixins.extend({
           transitionName: this.transitionDaysName,
         },
         on: {
-          "update-month": this.changeMonth,
-          "update-hovered-day": this.reOrderSelectedDate,
-          "select-date": this.selectDate,
+          'update-month': this.changeMonth,
+          'update-hovered-day': this.reOrderSelectedDate,
+          'select-date': this.selectDate,
         },
       });
     },
-    genQuickButtons() {
+    genQuickButtons () {
       const todayDate = generateDate({
         date: new Date(),
         locale: this.currentLocale,
       });
-      const yesterdayDate = todayDate.subtract(1, "day");
-      const tomorrowDate = todayDate.add(1, "day");
+      const yesterdayDate = todayDate.subtract(1, 'day');
+      const tomorrowDate = todayDate.add(1, 'day');
 
       const yesterdayButton = this.$createElement(VDPickerButtons, {
-        props: { label: "Yesterday" },
+        props: { label: 'Yesterday' },
         on: { click: () => (this.mutableDate = yesterdayDate) },
       });
       const todayButton = this.$createElement(VDPickerButtons, {
-        props: { label: "Today" },
+        props: { label: 'Today' },
         on: { click: () => (this.mutableDate = todayDate) },
       });
       const tomorrowButton = this.$createElement(VDPickerButtons, {
-        props: { label: "Tomorrow" },
+        props: { label: 'Tomorrow' },
         on: { click: () => (this.mutableDate = tomorrowDate) },
       });
-      console.log("genQuickButtons");
-      return this.$createElement("div", { staticClass: "vd-picker__buttons" }, [
+      console.log('genQuickButtons');
+      return this.$createElement('div', { staticClass: 'vd-picker__buttons' }, [
         yesterdayButton,
         todayButton,
         tomorrowButton,
       ]);
     },
-    genMonths() {
+    genMonths () {
       const { minMonth, maxMonth } = this.formatters;
 
       return this.$createElement(VDPickerMonths, {
@@ -477,7 +477,7 @@ export default baseMixins.extend({
         },
       });
     },
-    genQuarters() {
+    genQuarters () {
       const { minMonth, maxMonth } = this.formatters;
 
       return this.$createElement(VDPickerQuarters, {
@@ -500,7 +500,7 @@ export default baseMixins.extend({
         },
       });
     },
-    genYears() {
+    genYears () {
       const { minYear, maxYear } = this.formatters;
 
       return this.$createElement(VDPickerYears, {
@@ -521,7 +521,7 @@ export default baseMixins.extend({
         },
       });
     },
-    genValidate() {
+    genValidate () {
       return this.$createElement(VDPickerValidate, {
         props: {
           buttonValidate: this.buttonValidate,
@@ -531,19 +531,19 @@ export default baseMixins.extend({
           range: this.range,
         },
         on: {
-          cancel: () => this.$emit("close"),
-          validate: () => this.$emit("validateDate"),
+          cancel: () => this.$emit('close'),
+          validate: () => this.$emit('validateDate'),
         },
       });
     },
   },
-  render(h) {
+  render (h) {
     return h(
-      "div",
+      'div',
       {
-        staticClass: "vd-picker",
+        staticClass: 'vd-picker',
         class: this.classes,
-        ref: "datepicker",
+        ref: 'datepicker',
       },
       [
         // -- Title should be visible only on fullscreen mode
