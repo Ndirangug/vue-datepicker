@@ -174,6 +174,7 @@ export default baseMixins.extend({
       }
     },
     selectDate (day) {
+      console.log('selectDate', day);
       if (this.range) {
         // If rangeIsSelected or no dates selected => should reset, and select start
         if (
@@ -375,8 +376,6 @@ export default baseMixins.extend({
         this.mode === DATEPICKER_MODES.month && this.genMonths(),
         this.mode === DATEPICKER_MODES.quarter && this.genQuarters(),
         this.mode === DATEPICKER_MODES.year && this.genYears(),
-        this.mode !== DATEPICKER_MODES.year && this.genControls(),
-        this.mode === DATEPICKER_MODES.date && this.genQuickButtons(),
       ];
 
       return this.$createElement(
@@ -429,31 +428,34 @@ export default baseMixins.extend({
       });
     },
     genQuickButtons () {
-      const todayDate = generateDate({
-        date: new Date(),
-        locale: this.currentLocale,
-      });
-      const yesterdayDate = todayDate.subtract(1, 'day');
-      const tomorrowDate = todayDate.add(1, 'day');
+      // const todayDate = generateDate({
+      //   date: new Date(),
+      //   locale: this.currentLocale,
+      // });
+      // const yesterdayDate = todayDate.subtract(1, 'day');
+      // const tomorrowDate = todayDate.add(1, 'day');
 
-      const yesterdayButton = this.$createElement(VDPickerButtons, {
-        props: { label: 'Yesterday' },
-        on: { click: () => (this.mutableDate = yesterdayDate) },
+      // const yesterdayButton = this.$createElement(VDPickerButtons, {
+      //   props: { label: 'Yesterday' },
+      //   nativeOn: { click: () => (this.selectDate(yesterdayDate)) },
+      // });
+      // const todayButton = this.$createElement(VDPickerButtons, {
+      //   props: { label: 'Today' },
+      //   nativeOn: { click: () => (this.selectDate(todayDate)) },
+      // });
+      // const tomorrowButton = this.$createElement(VDPickerButtons, {
+      //   props: { label: 'Tomorrow' },
+      //   nativeOn: { click: () => (this.selectDate(tomorrowDate)) },
+      // });
+
+      // return this.$createElement('div', { staticClass: 'vd-picker__buttons' }, [
+      //   yesterdayButton,
+      //   todayButton,
+      //   tomorrowButton,
+      // ]);
+      return this.$createElement(VDPickerButtons, {
+        on: { 'select-date': this.selectDate },
       });
-      const todayButton = this.$createElement(VDPickerButtons, {
-        props: { label: 'Today' },
-        on: { click: () => (this.mutableDate = todayDate) },
-      });
-      const tomorrowButton = this.$createElement(VDPickerButtons, {
-        props: { label: 'Tomorrow' },
-        on: { click: () => (this.mutableDate = tomorrowDate) },
-      });
-      console.log('genQuickButtons');
-      return this.$createElement('div', { staticClass: 'vd-picker__buttons' }, [
-        yesterdayButton,
-        todayButton,
-        tomorrowButton,
-      ]);
     },
     genMonths () {
       const { minMonth, maxMonth } = this.formatters;

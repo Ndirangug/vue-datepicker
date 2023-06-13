@@ -10,8 +10,7 @@ import mixins from '../../../utils/mixins';
 const baseMixins = mixins(colorable);
 
 export default baseMixins.extend({
-  name: 'VDPickerButtons',
-  inject: ['VDPicker'],
+  name: 'VDPickerButton',
   props: {
     label: { type: String },
   },
@@ -27,20 +26,7 @@ export default baseMixins.extend({
       return this.isDateDefined;
     },
   },
-  methods: {
-    // ------------------------------
-    // Events
-    // ------------------------------
-    onKeyDown (event) {
-      this.$emit('keydown', event);
-    },
-    clearableCallback () {
-      this.$emit('clearDate');
-    },
-    // ------------------------------
-    // Generate Template
-    // ------------------------------
-  },
+
   render (h) {
     return h('button', this.label);
   },
