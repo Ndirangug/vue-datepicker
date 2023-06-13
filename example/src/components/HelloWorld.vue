@@ -28,12 +28,19 @@
       </li>
     </ul>
     <h3>Vue Date Picker</h3>
+    <VueDatePicker />
   </div>
 </template>
 
 <script>
+import { VueDatePicker } from "@ndirangug/vue-datepicker";
+import "@ndirangug/vue-datepicker/dist/vue-datepicker.min.css";
+
 export default {
   name: "HelloWorld",
+  components: {
+    VueDatePicker,
+  },
   props: {
     msg: String,
   },

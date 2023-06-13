@@ -446,8 +446,8 @@ export default baseMixins.extend({
         props: { label: "Tomorrow" },
         on: { click: () => (this.mutableDate = tomorrowDate) },
       });
-
-      return this.$createElement("div", { class: "vd-quick-buttons" }, [
+      console.log("genQuickButtons");
+      return this.$createElement("div", { staticClass: "vd-picker__buttons" }, [
         yesterdayButton,
         todayButton,
         tomorrowButton,
